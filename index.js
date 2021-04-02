@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const MongoClient = require('mongodb').MongoClient;
+const ObjectId = require("mongodb").ObjectId
 const cors = require('cors');
 const bodyParser = require('body-parser');
 require('dotenv').config()
@@ -35,6 +36,14 @@ client.connect(err => {
         productCollection.find({}).toArray((error, docs) => {
             res.send(docs)
         })
+    })
+
+    app.delete("/delete/:id", (req, res) => {
+        productCollection
+            .deleteOne({ _id: ObjectId(req.params.id) })
+            .then((result) => {
+                res.send(result.deletedCount > 0)
+            })
     })
 });
 
